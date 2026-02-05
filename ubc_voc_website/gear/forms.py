@@ -42,11 +42,13 @@ class GearHourForm(forms.ModelForm):
     start_date = forms.DateField(
         required=True,
         initial=timezone.localdate(),
-        widget=forms.TextInput(attrs={'class': 'flatpickr-date'})
+        widget=forms.TextInput(attrs={'class': 'flatpickr-date'}),
+        label="Date (recurring weekly)"
     )
     end_date = forms.DateField(
         required=True,
-        widget=forms.TextInput(attrs={'class': 'flatpickr-date'})
+        widget=forms.TextInput(attrs={'class': 'flatpickr-date'}),
+        label="Date of last recurrence"
     )
     start_time = forms.TimeField(
         required=True,
