@@ -175,7 +175,9 @@
             <div id="signup-list">
                 {% if signups.going %}
                     <h5>Going:</h5>
-                    <a href="{% url 'download_participant_list' trip.id %}" target="_blank">Download Participant List</a>
+                    {% if request.user in trip.organizers.all or request.user|is_exec %}
+                        <a href="{% url 'download_participant_list' trip.id %}" target="_blank">Download Participant List</a>
+                    {% endif %}
                     <table class="table table-striped table-hover">
                         <tbody>
                             {% for signup in signups.going %}

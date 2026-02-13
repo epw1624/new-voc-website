@@ -346,7 +346,7 @@ def download_participant_list(request, trip_id):
 
         response = HttpResponse(pdf_file, content_type="application/pdf")
         filename = f"{trip.name.replace(' ', '_')}_participants.pdf"
-        response["Content-Disposition"] = f"attachment; filename='{filename}'"
+        response["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
     return redirect(f"/trips/details/{trip_id}")
