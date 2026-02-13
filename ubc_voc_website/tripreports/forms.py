@@ -41,10 +41,15 @@ class TripReportForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ["body"]
+        fields = ["body", "parent"]
         labels = {
             "body": ""
         }
         widgets = {
             "body": forms.Textarea(attrs={"rows": 3, "placeholder": "Add a comment..."})
         }
+    parent = forms.ModelChoiceField(
+        queryset=Comment.objects.all(),
+        required=False,
+        widget=forms.HiddenInput()
+    )

@@ -43,20 +43,51 @@
 
         <h3>Comments</h3>
         {% for comment in comments %}
-            <div class="card mb-4">
+            <div class="card my-3">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div>
                         <a href="{% url 'profile' comment.user.id %}" class="fw-bold">{{ comment.user.profile.full_name }}</a> said:
                     </div>
                     <small class="text-muted">
-                        {{ comment.timestamp|date:"F j, Y \a\t g:i a" }}
+                        {{ comment.timestamp|date:"F j, Y \\a\\t g:i a" }}
                     </small>
                 </div>
                 <div class="card-body">
-                    <p class="card-text">
-                        {{ comment.body }}
-                    </p>
+                    <p class="card-text">{{ comment.body }}</p>
                 </div>
+            </div>
+
+            <div class="replies-container ms-4" style="border-left: 2px solid #e9ecef; padding-left: 1rem; margin-left: 0;">
+                {% for reply in comment.replies.all %}
+                    <div class="card mb-3">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div>
+                                <a href="{% url 'profile' reply.user.id %}" class="fw-bold">{{ reply.user.profile.full_name }}</a> replied:
+                            </div>
+                            <small class="text-muted">{{ reply.timestamp|date:"F j, Y \\a\\t g:i a" }}</small>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ reply.body }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {% if request.user|is_member %}
+                    <div class="mt-2" style="margin-left: 0;">
+                        <button type="button" class="btn btn-link reply-toggle small text-muted" data-comment-id="{{ comment.id }}">Reply</button>
+                    </div>
+                    <div class="reply-form mb-3" id="reply-form-{{ comment.id }}" style="display:none; margin-top:0.5rem;">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-2">
+                                <textarea name="body" rows="2" class="form-control" placeholder="Write a reply..."></textarea>
+                                <input type="hidden" name="parent" value="{{ comment.id }}">
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-primary">Post Reply</button>
+                            <button type="button" class="btn btn-sm btn-link cancel-reply" data-comment-id="{{ comment.id }}">Cancel</button>
+                        </form>
+                    </div>
+                {% endif %}
             </div>
         {% empty %}
             <p>No comments to display</p>
@@ -71,5 +102,28 @@
         {% else %}
             <p><a href="{% url 'account_login' %}?next={{ request.path }}">Log in</a> to comment</p>
         {% endif %}
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.reply-toggle').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var id = btn.getAttribute('data-comment-id');
+                        var form = document.getElementById('reply-form-' + id);
+                        if (form.style.display === 'none') {
+                            form.style.display = 'block';
+                        } else {
+                            form.style.display = 'none';
+                        }
+                    });
+                });
+                document.querySelectorAll('.cancel-reply').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var id = btn.getAttribute('data-comment-id');
+                        var form = document.getElementById('reply-form-' + id);
+                        form.style.display = 'none';
+                    });
+                });
+            });
+        </script>
     </div>
 {% endblock %}

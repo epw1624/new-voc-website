@@ -75,7 +75,8 @@ class TripReport(Page):
 
         context = super().get_context(request)
         context["form"] = form
-        context["comments"] = self.comments.all().order_by("timestamp")
+        # only top-level comments; replies are accessible via `comment.replies`
+        context["comments"] = self.comments.filter(parent__isnull=True).order_by("timestamp").prefetch_related("replies", "replies__user__profile")
         return TemplateResponse(request, self.get_template(request), context)
 
 class Comment(models.Model):
@@ -90,6 +91,13 @@ class Comment(models.Model):
     )
     body = models.TextField()
     timestamp = models.DateTimeField(default=timezone.now)
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='replies'
+    )
 
 class TripReportIndexPage(Page):
     intro = RichTextField(blank=True)
