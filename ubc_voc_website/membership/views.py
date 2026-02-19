@@ -234,6 +234,30 @@ def view_waiver(request, id):
         response.write(pdf.write_pdf())
         return response
 
+
+@Members
+def proof_of_membership(request):
+    membership = Membership.objects.filter(user=request.user).order_by("-end_date").first()
+    if not membership:
+        raise Http404("No membership found for user")
+
+    profile = getattr(request.user, 'profile', None)
+
+    context = {
+        "membership": membership,
+        "profile": profile,
+        "user": request.user
+    }
+
+    html_content = render_to_string("membership/proof_of_membership.html", context)
+    base_url = request.build_absolute_uri('/')
+    pdf = HTML(string=html_content, base_url=base_url)
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = "attachment; filename=proof_of_membership.pdf"
+    response.write(pdf.write_pdf())
+    return response
+
 @Execs
 def manage_memberships(request):
     q = request.GET.get("q")

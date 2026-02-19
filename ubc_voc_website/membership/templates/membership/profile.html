@@ -34,6 +34,7 @@
                 {% if own_profile %}
                     <div class="col-auto d-flex align-items-center gap-3">
                         <a href="{% url 'edit_profile' %}" class="btn btn-outline-secondary"><i class="bi bi-pencil-fill me-2"></i> Edit My Profile</a>
+                        <a href="{% url 'proof_of_membership' %}" class="btn btn-outline-primary" target="_blank" rel="noopener noreferrer"><i class="bi bi-file-earmark-pdf me-2"></i> Download Proof of Membership</a>
                     </div>
                 {% endif %}
             </div>

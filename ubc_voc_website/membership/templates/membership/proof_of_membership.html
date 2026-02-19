@@ -1,0 +1,54 @@
+{% load static %}
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    body { font-family: Georgia, 'Times New Roman', Times, serif; margin: 12px; color: #222 }
+    .header-top { display: flex; align-items: center; gap: 16px; margin-bottom: 8px }
+    .logo { width: 120px; height: auto }
+    .club-name { font-size: 14pt; font-weight: 700 }
+    .title-block { margin: 24px 0 12px 0 }
+    h1 { font-size: 24pt; margin: 0 0 8px 0 }
+    p.lead { margin-top: 6px; font-size: 12pt }
+    .details { margin-top: 20px; width: 100%; }
+    .field { margin: 12px 0; display: flex; align-items: center }
+    .label { width: 220px; font-weight: bold }
+    .value { flex: 1 1 auto }
+  </style>
+</head>
+<body>
+  <div class="header-top">
+    <img class="logo" src="{% static 'ubc_voc_website/voc_colour_logo.png' %}" alt="VOC logo" />
+    <div class="club-name">UBC Varsity Outdoor Club</div>
+  </div>
+
+  <div class="title-block">
+    <h1>Proof of VOC Membership</h1>
+    <p class="lead">This is confirmation that <strong>{{ user.get_full_name }}</strong> is a member of the UBC Varsity Outdoor Club.</p>
+  </div>
+
+  <div class="details">
+    <div class="field">
+      <div class="label">Name:</div>
+      <div class="value">{{ user.get_full_name }}</div>
+    </div>
+
+    <div class="field">
+      <div class="label">VOC Membership ID:</div>
+      <div class="value">{{ user.id }}</div>
+    </div>
+
+    <div class="field">
+      <div class="label">Membership Start Date:</div>
+      <div class="value">{{ membership.start_date }}</div>
+    </div>
+
+    <div class="field">
+      <div class="label">Membership End Date:</div>
+      <div class="value">{{ membership.end_date }}</div>
+    </div>
+  </div>
+
+</body>
+</html>

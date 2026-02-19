@@ -13,5 +13,6 @@ urlpatterns = [
     path("memberships/<int:id>/", get_memberships_for_user, name="get_memberships_for_user"),
     path("toggle/<int:membership_id>/", toggle_membership, name="toggle_membership"),
     path("membership-stats/", membership_stats, name="membership_stats"),
-    path("download-member-table/<str:type>/", download_member_table, name="download_member_table")
+    path("download-member-table/<str:type>/", download_member_table, name="download_member_table"),
+    path("proof-of-membership/", proof_of_membership, name="proof_of_membership")
 ]
