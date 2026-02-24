@@ -8,7 +8,7 @@
 {% block head_content %}
     <link href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const categoryFilter = document.getElementById("category-filter");
@@ -25,12 +25,26 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center my-4">
             <h2>Trip Reports</h2>
-            {% if request.user|is_member %}
-                <div class="d-flex">
+            <div class="d-flex align-items-center">
+                <div class="btn-group rounded-pill border overflow-hidden me-3" role="group" style="background-color: #f8f9fa; height: 38px;">
+                    <a href="?view=card{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+                    class="btn btn-sm px-4 d-flex align-items-center border-0 {% if request.GET.view != 'list' %}btn-primary text-white{% else %}text-secondary{% endif %}"
+                    style="transition: none;"
+                    title="Grid View">
+                        <i class="fas fa-th-large fa-fw"></i>
+                    </a>
+                    <a href="?view=list{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+                    class="btn btn-sm px-4 d-flex align-items-center border-0 {% if request.GET.view == 'list' %}btn-primary text-white{% else %}text-secondary{% endif %}"
+                    style="transition: none;"
+                    title="List View">
+                        <i class="fas fa-list fa-fw"></i>
+                    </a>
+                </div>
+                {% if request.user|is_member %}
                     <a href="{% url 'my_trip_reports' %}" class="btn btn-secondary mx-2">My Trip Reports</a>
                     <a href="{% url 'trip_report_create' %}" class="btn btn-primary mx-2">+ Write a trip report</a>
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
         <form method="get" class="row mb-4 d-flex align-items-center">
             <div class="col-md-5">
@@ -49,44 +63,68 @@
                 <button type="submit" class="btn btn-info w-100">Apply Filters</button>
             </div>
         </form>
-        <div class="list-group">
-            {% for trip_report in reports %}
-                <div 
-                    class="card mb-4 shadow-sm trip-report-card"
-                    data-categories="{% for cat in trip_report.categories.all %}{{ cat.name }}{% if not forloop.last %},{% endif %}{% endfor %}"
-                >
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center">
+
+        {% if request.GET.view == "list" %}
+            <div class="mb-5">
+                {% for trip_report in reports %}
+                    {% ifchanged trip_report.first_published_at|date:"Y" %}
+                        <h3 class="mt-4 mb-3 pb-2 border-bottom fw-bold">
+                            {{ trip_report.first_published_at|date:"Y" }}
+                        </h3>
+                    {% endifchanged %}
+                    
+                    <div class="d-flex align-items-baseline mb-2">
+                        <small class="text-muted font-monospace me-4" style="min-width: 100px;">
+                            {{ trip_report.first_published_at|date:"M d, Y" }}
+                        </small>
+                        <a href="{{ trip_report.url }}" class="text-decoration-none fw-semibold">
+                            {{ trip_report.title }}
+                        </a>
+                    </div>
+                {% empty %}
+                    <p id="no-results">No trip reports found</p>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="list-group">
+                {% for trip_report in reports %}
+                    <div 
+                        class="card mb-4 shadow-sm trip-report-card"
+                        data-categories="{% for cat in trip_report.categories.all %}{{ cat.name }}{% if not forloop.last %},{% endif %}{% endfor %}"
+                    >
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h4 class=card-title"><a href="{{ trip_report.url }}">{{ trip_report.title }}</a></h4>
+                                    <small class="text-muted">
+                                        by <a href="{% url 'profile' trip_report.owner.id %}">{{ trip_report.owner.profile.full_name }}</a>
+                                    </small>
+                                </div>
+                                <div class="text-end">
+                                    {% for category in trip_report.categories.all %}
+                                        <span class="badge rounded-pill bg-secondary ms-1">
+                                            {{ category.name }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
                             <div>
-                                <h4 class=card-title"><a href="{{ trip_report.url }}">{{ trip_report.title }}</a></h4>
                                 <small class="text-muted">
-                                    by <a href="{% url 'profile' trip_report.owner.id %}">{{ trip_report.owner.profile.full_name }}</a>
+                                    posted {{ trip_report.first_published_at|date:"M d, Y H:i" }}
                                 </small>
                             </div>
-                            <div class="text-end">
-                                {% for category in trip_report.categories.all %}
-                                    <span class="badge rounded-pill bg-secondary ms-1">
-                                        {{ category.name }}
-                                    </span>
-                                {% endfor %}
+                        </div>
+                        {% if not trip_report.legacy_pdf %}
+                            <div class="card-body">
+                                {{ trip_report.get_body_html|strip_images|truncatewords_html:50 }}
                             </div>
-                        </div>
-                        <div>
-                            <small class="text-muted">
-                                posted {{ trip_report.first_published_at|date:"M d, Y H:i" }}
-                            </small>
-                        </div>
+                        {% endif %}
                     </div>
-                    {% if not trip_report.legacy_pdf %}
-                        <div class="card-body">
-                            {{ trip_report.get_body_html|strip_images|truncatewords_html:50 }}
-                        </div>
-                    {% endif %}
-                </div>
-            {% empty %}
-                <p id="no-results">No trip reports found</p>
-            {% endfor %}
-        </div>
+                {% empty %}
+                    <p id="no-results">No trip reports found</p>
+                {% endfor %}
+            </div>
+        {% endif %}
 
         {% if reports.has_other_pages %}
             <nav class="mt-4">
