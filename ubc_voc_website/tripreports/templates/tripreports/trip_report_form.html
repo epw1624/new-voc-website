@@ -59,6 +59,15 @@
                     }
                 };
             });
+
+            // Catch cases where the user has pasted the image directly rather than using the upload flow
+            document.querySelector('#trip-report-form').onsubmit = function(e) {
+                const quillContent = document.querySelector('.ql-editor').innerHTML;
+                if (quillContent.includes('data:image/')) {
+                    alert("Please use the image button in the toolbar instead of pasting images directly.");
+                    e.preventDefault(); // Stop the form from submitting
+                }
+            };
         });
     </script>
 {% endblock %}
@@ -75,7 +84,7 @@
                 {{ form.errors }}
             </div>
         {% endif %}
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" id="trip-report-form">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" name="save" class="btn btn-secondary">Save</button>
