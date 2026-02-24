@@ -123,7 +123,7 @@ class TripReportIndexPage(Page):
             reports = reports.filter(categories__id=category_id)
 
         page = request.GET.get("page")
-        paginator = Paginator(reports, 20)
+        paginator = Paginator(reports, 50)
         try:
             reports = paginator.page(page)
         except PageNotAnInteger:
