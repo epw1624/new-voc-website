@@ -12,7 +12,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const categoryFilter = document.getElementById("category-filter");
-            const categoryChoices = new Choices(categoryFilter, {
+            new Choices(categoryFilter, {
                 placeholder: true,
                 placeholderValue: "Filter by Category",
                 removeItemButton: true
@@ -27,16 +27,14 @@
             <h2>Trip Reports</h2>
             <div class="d-flex align-items-center">
                 <div class="btn-group rounded-pill border overflow-hidden me-3" role="group" style="background-color: #f8f9fa; height: 38px;">
-                    <a href="?view=card{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+                    <a href="?view=card&page={{ reports.number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% for cat in request.GET.getlist.category %}&category={{ cat }}{% endfor %}" 
                     class="btn btn-sm px-4 d-flex align-items-center border-0 {% if request.GET.view != 'list' %}btn-primary text-white{% else %}text-secondary{% endif %}"
-                    style="transition: none;"
-                    title="Grid View">
+                    style="transition: none;" title="Grid View">
                         <i class="fas fa-th-large fa-fw"></i>
                     </a>
-                    <a href="?view=list{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+                    <a href="?view=list&page={{ reports.number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% for cat in request.GET.getlist.category %}&category={{ cat }}{% endfor %}" 
                     class="btn btn-sm px-4 d-flex align-items-center border-0 {% if request.GET.view == 'list' %}btn-primary text-white{% else %}text-secondary{% endif %}"
-                    style="transition: none;"
-                    title="List View">
+                    style="transition: none;" title="List View">
                         <i class="fas fa-list fa-fw"></i>
                     </a>
                 </div>
@@ -46,14 +44,16 @@
                 {% endif %}
             </div>
         </div>
+
         <form method="get" class="row mb-4 d-flex align-items-center">
+            <input type="hidden" name="view" value="{{ request.GET.view|default:'card' }}">
             <div class="col-md-5">
                 <input type="text" name="q" class="form-control" placeholder="Search" value="{{ request.GET.q }}">
             </div>
             <div class="col-md-4">
                 <select name="category" id="category-filter" class="form-select" multiple>
                     {% for category in categories %}
-                        <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"i" %}selected{% endif %}>
+                        <option value="{{ category.id }}" {% if category.id|stringformat:"i" in request.GET.getlist.category %}selected{% endif %}>
                             {{ category.name }}
                         </option>
                     {% endfor %}
@@ -68,50 +68,33 @@
             <div class="mb-5">
                 {% for trip_report in reports %}
                     {% ifchanged trip_report.first_published_at|date:"Y" %}
-                        <h3 class="mt-4 mb-3 pb-2 border-bottom fw-bold">
-                            {{ trip_report.first_published_at|date:"Y" }}
-                        </h3>
+                        <h3 class="mt-4 mb-3 pb-2 border-bottom fw-bold">{{ trip_report.first_published_at|date:"Y" }}</h3>
                     {% endifchanged %}
-                    
                     <div class="d-flex align-items-baseline mb-2">
-                        <small class="text-muted font-monospace me-4" style="min-width: 100px;">
+                        <small class="text-muted font-monospace me-4 text-center" style="min-width: 100px;">
                             {{ trip_report.first_published_at|date:"M d, Y" }}
                         </small>
-                        <a href="{{ trip_report.url }}" class="text-decoration-none fw-semibold">
-                            {{ trip_report.title }}
-                        </a>
+                        <a href="{{ trip_report.url }}" class="text-decoration-none fw-semibold">{{ trip_report.title }}</a>
                     </div>
                 {% empty %}
-                    <p id="no-results">No trip reports found</p>
+                    <p>No trip reports found</p>
                 {% endfor %}
             </div>
         {% else %}
             <div class="list-group">
                 {% for trip_report in reports %}
-                    <div 
-                        class="card mb-4 shadow-sm trip-report-card"
-                        data-categories="{% for cat in trip_report.categories.all %}{{ cat.name }}{% if not forloop.last %},{% endif %}{% endfor %}"
-                    >
-                        <div class="card-header">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header bg-white">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h4 class=card-title"><a href="{{ trip_report.url }}">{{ trip_report.title }}</a></h4>
-                                    <small class="text-muted">
-                                        by <a href="{% url 'profile' trip_report.owner.id %}">{{ trip_report.owner.profile.full_name }}</a>
-                                    </small>
+                                    <h4 class="card-title mb-1"><a href="{{ trip_report.url }}">{{ trip_report.title }}</a></h4>
+                                    <small class="text-muted">by <a href="{% url 'profile' trip_report.owner.id %}">{{ trip_report.owner.profile.full_name }}</a></small>
                                 </div>
-                                <div class="text-end">
+                                <div>
                                     {% for category in trip_report.categories.all %}
-                                        <span class="badge rounded-pill bg-secondary ms-1">
-                                            {{ category.name }}
-                                        </span>
+                                        <span class="badge rounded-pill bg-secondary ms-1">{{ category.name }}</span>
                                     {% endfor %}
                                 </div>
-                            </div>
-                            <div>
-                                <small class="text-muted">
-                                    posted {{ trip_report.first_published_at|date:"M d, Y H:i" }}
-                                </small>
                             </div>
                         </div>
                         {% if not trip_report.legacy_pdf %}
@@ -120,8 +103,6 @@
                             </div>
                         {% endif %}
                     </div>
-                {% empty %}
-                    <p id="no-results">No trip reports found</p>
                 {% endfor %}
             </div>
         {% endif %}
@@ -130,13 +111,17 @@
             <nav class="mt-4">
                 <ul class="pagination justify-content-center">
                     {% if reports.has_previous %}
-                        <li class="page-item"><a class="page-link" href="?page={{ reports.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">&laquo;</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ reports.previous_page_number }}&view={{ request.GET.view|default:'card' }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% for cat in request.GET.getlist.category %}&category={{ cat }}{% endfor %}">&laquo;</a>
+                        </li>
                     {% endif %}
 
                     <li class="page-item disabled"><span class="page-link">Page {{ reports.number }} of {{ reports.paginator.num_pages }}</span></li>
 
                     {% if reports.has_next %}
-                        <li class="page-item"><a class="page-link" href="?page={{ reports.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">&raquo;</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ reports.next_page_number }}&view={{ request.GET.view|default:'card' }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% for cat in request.GET.getlist.category %}&category={{ cat }}{% endfor %}">&raquo;</a>
+                        </li>
                     {% endif %}
                 </ul>
             </nav>
