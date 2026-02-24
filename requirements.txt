@@ -8,7 +8,7 @@ django-quill-editor==0.1.42
 gunicorn==23.0.0
 mailchimp3==3.0.21
 openpyxl==3.1.5
-Pillow==10.4.0
+Pillow==12.1.1
 psycopg[binary]
 python-dateutil==2.9.0
 pytz
