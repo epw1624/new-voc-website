@@ -9,6 +9,7 @@ from django.utils.safestring import mark_safe
 from ubc_voc_website.utils import is_member
 
 import json
+from django_quill.widgets import QuillWidget
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import RichTextField
@@ -28,7 +29,7 @@ class TripReport(Page):
     categories = ParentalManyToManyField("tripreports.TripReportCategory", blank=True)
 
     content_panels = Page.content_panels + [
-        FieldPanel('body'),
+        FieldPanel('body', widget=QuillWidget),
         FieldPanel('trip'),
         FieldPanel('categories'),
         FieldPanel('is_private'),
