@@ -3,6 +3,7 @@ from django.conf import settings
 from django.utils import timezone
 
 from colorfield.fields import ColorField
+import datetime
 from zoneinfo import ZoneInfo
 
 pacific_timezone = ZoneInfo("America/Vancouver")
@@ -208,6 +209,7 @@ class TripSignup(models.Model):
 
 class Meeting(models.Model):
     name = models.CharField(max_length=256)
-    start_date = models.DateTimeField()
+    start_date = models.DateField()
     end_date = models.DateField()
+    start_time = models.TimeField(default=datetime.time(0, 0))
     duration = models.IntegerField(default=60)

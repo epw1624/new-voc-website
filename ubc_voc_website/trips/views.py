@@ -406,18 +406,21 @@ def clubroom_calendar(request):
                 "type": "pretrip"
             })
 
-        meeting_sets = Meeting.objects.all()
-        for set in meeting_sets:
-            start_time = set.start_date.astimezone(pacific_timezone)
-            while start_time.date() <= set.end_date:
+        meetings = Meeting.objects.filter(end_date__gte=timezone.localdate())
+        for meeting in meetings:
+            date = meeting.start_date
+            while date <= meeting.end_date:
+                start_datetime = datetime.datetime.combine(date, meeting.start_time)
+                start_datetime = pacific_timezone.localize(start_datetime)
+                end_datetime = start_datetime + datetime.timedelta(minutes=meeting.duration)
                 events_calendar.append({
-                    "title": set.name,
-                    "start": start_time.isoformat(),
-                    "end": (start_time + datetime.timedelta(minutes=set.duration)).isoformat(),
+                    "title": meeting.name,
+                    "start": start_datetime.isoformat(),
+                    "end": end_datetime.isoformat(),
                     "color": "#FF0000",
                     "type": "meeting"
                 })
-                start_time += datetime.timedelta(days=7)
+                date += datetime.timedelta(days=7)
 
         gear_hours = GearHour.objects.filter(end_date__gte=timezone.localdate())
         cancelled_gear_hours = CancelledGearHour.objects.filter(gear_hour__in=gear_hours)
