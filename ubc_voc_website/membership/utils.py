@@ -1,10 +1,11 @@
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.db.models import Q
 from django.template.loader import render_to_string
 from django.utils import timezone
 from datetime import date
 
-from .models import Membership
+from .models import Membership, Profile
 
 def get_end_date(today):
     """
@@ -79,3 +80,20 @@ def send_honorary_member_request_email(request):
     )
     email.attach_alternative(html_body, "text/html")
     email.send()
+
+def member_search(q):
+    if len(q) < 2:
+        return Profile.objects.none()
+    
+    today = timezone.localdate()
+
+    return Profile.objects.filter(
+        Q(first_name__icontains=q) |
+        Q(last_name__icontains=q) |
+        Q(user__email__icontains=q)
+    ).filter(
+        user__membership__active=True,
+        user__membership__end_date__gte=today
+    ).select_related("user").only(
+        "user__id", "user__email", "first_name", "last_name"
+    )

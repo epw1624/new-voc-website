@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.db.models import Q
-from django.http import HttpResponse
+from django.db.models import Q, Subquery
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.template.loader import render_to_string
 from django.utils import timezone
@@ -13,7 +13,7 @@ from .utils import is_signup_type_change_valid, signup_type_as_str, valid_signup
 from gear.forms import GearHourForm
 from gear.models import CancelledGearHour, GearHour
 from membership.models import Membership, Profile
-from membership.utils import get_membership_type
+from membership.utils import get_membership_type, member_search
 from ubc_voc_website.decorators import Members
 from ubc_voc_website.utils import is_exec, is_member
 
@@ -301,6 +301,24 @@ def mark_as_going(request, trip_id, user_id):
         trip_signup.save()
 
         return redirect(f"/trips/details/{trip_id}")
+    
+@Members
+def going_list_search(request, trip_id):
+    trip = get_object_or_404(Trip, id=trip_id)
+    if not trip.organizers.filter(pk=request.user.pk).exists():
+        return render(request, "access_denied.html", status=403)
+    
+    going_list = TripSignup.objects.filter(
+        trip=trip,
+        type=TripSignupTypes.GOING
+    ).values_list("user_id", flat=True)
+
+    q = request.GET.get("q")
+    profiles = member_search(q)
+    profiles = profiles.exclude(user_id__in=Subquery(going_list)).distinct()
+
+    results = [{"id": profile.user.id, "full_name": f"{profile.first_name} {profile.last_name}"} for profile in profiles]
+    return JsonResponse(results, safe=False)
     
 @Members
 def bulk_mark_going(request, trip_id):
