@@ -4,10 +4,6 @@
 {% block title %}Log In{% endblock %}
 
 {% block content %}
-    <div class="alert alert-info">
-        <p>Welcome to the new VOC website! Before you log in for the first time, you will need to <a href="{% url 'account_reset_password' %}">reset your password</a>.</p>
-        <p>You may reuse your previous password, but we also encourage you to take this opportunity to ensure that you are using a strong password!</p>
-    </div>
     <h2>Sign In</h2>
     <form method="post" action="{% url 'account_login' %}">
         {% csrf_token %}
