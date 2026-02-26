@@ -14,3 +14,4 @@ python-dateutil==2.9.0
 pytz
 wagtail==7.3
 WeasyPrint==68.0
+whoosh==2.7.4
