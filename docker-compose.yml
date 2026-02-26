@@ -11,6 +11,7 @@ services:
       - static_volume:/home/ubc_voc_website/staticfiles
       - media_volume:/home/ubc_voc_website/media
       - logs_volume:/home/ubc_voc_website/logs
+      - whoosh_index:/home/ubc_voc_website/whoosh_index
     ports:
       - "8000:8000"
     env_file:
