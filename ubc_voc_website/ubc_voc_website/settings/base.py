@@ -194,6 +194,7 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
     },
 }
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 MACHINA_PROFILE_AVATARS_ENABLED = False
 MACHINA_USER_DISPLAY_NAME_METHOD = 'get_full_name'

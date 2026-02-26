@@ -6,3 +6,4 @@ staticfiles
 .env
 
 data_migration/
+whoosh_index/

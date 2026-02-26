@@ -78,3 +78,4 @@ class Command(BaseCommand):
                 )
                 message.attach_alternative(html_body, "text/html")
                 message.send()
+                self.stdout.write(f"Email sent to {rental.member.email}")
