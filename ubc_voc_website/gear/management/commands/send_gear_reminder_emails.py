@@ -47,7 +47,7 @@ class Command(BaseCommand):
                 message = EmailMultiAlternatives(
                     subject="VOC Gear Rental Due Soon!",
                     body=text_body,
-                    from_email=[settings.DEFAULT_FROM_EMAIL],
+                    from_email=settings.DEFAULT_FROM_EMAIL,
                     to=[rental.member.email]
                 )
                 message.attach_alternative(html_body, "text/html")
@@ -73,7 +73,7 @@ class Command(BaseCommand):
                 message = EmailMultiAlternatives(
                     subject="Overdue VOC Gear Rental",
                     body=text_body,
-                    from_email=[settings.DEFAULT_FROM_EMAIL],
+                    from_email=settings.DEFAULT_FROM_EMAIL,
                     to=[rental.member.email]
                 )
                 message.attach_alternative(html_body, "text/html")
