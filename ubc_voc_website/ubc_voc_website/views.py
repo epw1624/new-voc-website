@@ -38,9 +38,6 @@ def about(request):
 def how_to_join(request):
     return render(request, "how_to_join.html")
 
-def contact(request):
-    return render(request, "contact.html")
-
 @csrf_exempt
 @Members
 def quill_image_upload(request):
