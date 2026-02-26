@@ -397,7 +397,7 @@ def download_member_table(request, type):
         ws = wb.active
         ws.title = "ACC Membership Candidates"
 
-        fields = ['First Name', 'Last Name', 'Email', 'Phone', 'Birthdate']
+        fields = ['First Name', 'Last Name', 'Email']
         ws.append(fields)
 
         for profile in profiles:
@@ -405,8 +405,6 @@ def download_member_table(request, type):
                 profile.first_name,
                 profile.last_name,
                 profile.user.email,
-                profile.phone,
-                profile.birthdate
             ]
             ws.append(row)
 
