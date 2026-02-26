@@ -11,6 +11,7 @@ urlpatterns = [
     path('download-participant-list/<int:trip_id>/', download_participant_list, name="download_participant_list"),
     path('edit/<int:id>/', trip_edit, name="trip_edit"),
     path('mark-going/<int:trip_id>/<int:user_id>/', mark_as_going, name="mark_as_going"),
+    path('bulk-mark-going/<int:trip_id>', bulk_mark_going, name="bulk_mark_going"),
     path('remove-from-going/<int:trip_id>/<int:user_id>/', remove_from_going, name="remove_from_going"),
     path('previous/', previous_trips, name="previous_trips"),
     path('trip-organizer-message/', trip_organizer_message, name="trip_organizer_message"),

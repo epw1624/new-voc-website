@@ -303,6 +303,29 @@ def mark_as_going(request, trip_id, user_id):
         return redirect(f"/trips/details/{trip_id}")
     
 @Members
+def bulk_mark_going(request, trip_id):
+    trip = get_object_or_404(Trip, id=trip_id)
+
+    if not trip.organizers.filter(pk=request.user.pk).exists():
+        return render(request, "access_denied.html", status=403)
+    
+    if request.method == "POST":
+        user_ids = request.POST.getlist("user_ids")
+        user_ids = [id for id in user_ids if id and id.isdigit()]
+        if user_ids:
+            users = User.objects.filter(id__in=user_ids)
+            for user in users:
+                trip_signup, created = TripSignup.objects.get_or_create(
+                    trip=trip,
+                    user=user
+                )
+                trip_signup.type = TripSignupTypes.GOING
+                trip_signup.signup_time = timezone.now()
+                trip_signup.save()
+
+    return redirect(f"/trips/details/{trip_id}")
+    
+@Members
 def remove_from_going(request, trip_id, user_id):
     user = get_object_or_404(User, id=user_id)
     trip = get_object_or_404(Trip, id=trip_id)
