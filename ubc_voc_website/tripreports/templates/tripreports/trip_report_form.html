@@ -37,25 +37,34 @@
 
                 input.onchange = async () => {
                     const file = input.files[0];
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert("This file is too large (Max 2MB). Please resize it or use a smaller image.");
+                        return;
+                    }
+
                     const formData = new FormData();
                     formData.append("image", file);
 
-                    const response = await fetch("{% url 'quill_image_upload' %}", {
-                        method: "POST",
-                        body: formData,
-                        headers: {
-                            "X-CSRFToken": "{{ csrf_token }}"
+                    try {
+                        const response = await fetch("{% url 'quill_image_upload' %}", {
+                            method: "POST",
+                            body: formData,
+                            headers: {
+                                "X-CSRFToken": "{{ csrf_token }}"
+                            }
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            const range = quill.getSelection();
+                            quill.insertEmbed(range.index, "image", result.url);
                         }
-                    });
-
-                    const result = await response.json();
-
-                    if (response.ok) {
-                        const range = quill.getSelection();
-                        quill.insertEmbed(range.index, "image", result.url);
-                    }
-                    else {
-                        alert("Upload failed: " + (result.error || "Unknown error"));
+                        else {
+                            alert("Upload failed: " + (result.error || "Unknown error"));
+                        }
+                    } catch (err) {
+                        alert("Server error. Please email 'webmaster at ubc-voc.com'");
                     }
                 };
             });
