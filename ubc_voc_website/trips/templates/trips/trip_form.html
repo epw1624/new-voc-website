@@ -35,6 +35,11 @@
 
                     input.onchange = async () => {
                         const file = input.files[0];
+                        if (file.size > 2 * 1024 * 1024) {
+                            alert("This file is too large (Max 2MB). Please resize it or use a smaller image.");
+                            return;
+                        }
+
                         const formData = new FormData();
                         formData.append("image", file);
 
