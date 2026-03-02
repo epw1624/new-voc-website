@@ -432,7 +432,7 @@ def clubroom_calendar(request):
                 "type": "trip"
             })
 
-        upcoming_clubroom_pretrips = Trip.objects.filter(pretrip_location="VOC Clubroom").values(
+        upcoming_clubroom_pretrips = Trip.objects.filter(use_pretrip=True, pretrip_location="VOC Clubroom").values(
             "id", "name", "pretrip_time"
         )
         for pretrip in upcoming_clubroom_pretrips:
