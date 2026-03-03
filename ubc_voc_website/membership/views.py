@@ -22,7 +22,8 @@ from ubc_voc_website.utils import is_exec, is_member
 import base64
 import datetime
 from openpyxl import Workbook
-from weasyprint import HTML
+import os
+from weasyprint import CSS, HTML
 
 User = get_user_model()
 
@@ -226,12 +227,13 @@ def view_waiver(request, id):
     else:
         form = WaiverForm(user=membership.user, instance=waiver, readonly=True)
         html_content = render_to_string('membership/waiver_readonly.html', {'form': form, 'waiver': waiver, 'readonly': True})
-        base_url = request.build_absolute_uri('/')
-        pdf = HTML(string=html_content, base_url=base_url)
+        css_path = os.path.join(settings.STATIC_ROOT, "membership", "waiver.css")
+        pdf = HTML(string=html_content, base_url=request.build_absolute_uri('/')).write_pdf(
+            stylesheets=[CSS(css_path)]
+        )
 
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'inline; filename="waiver.pdf"'
-        response.write(pdf.write_pdf())
         return response
 
 
