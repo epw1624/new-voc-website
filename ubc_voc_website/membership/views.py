@@ -226,9 +226,16 @@ def view_waiver(request, id):
         return render(request, 'access_denied.html', status=403)
     else:
         form = WaiverForm(user=membership.user, instance=waiver, readonly=True)
-        html_content = render_to_string('membership/waiver_readonly.html', {'form': form, 'waiver': waiver, 'readonly': True})
+
+        context = {
+            "form": form,
+            "waiver": waiver,
+            "readonly": True,
+            "PROJECT_ROOT": settings.BASE_DIR
+        }
+        html_content = render_to_string('membership/waiver_readonly.html', context)
         css_path = os.path.join(settings.STATIC_ROOT, "membership", "waiver.css")
-        pdf = HTML(string=html_content, base_url=request.build_absolute_uri('/')).write_pdf(
+        pdf = HTML(string=html_content, base_url=settings.MEDIA_ROOT).write_pdf(
             stylesheets=[CSS(css_path)]
         )
 
