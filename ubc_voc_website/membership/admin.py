@@ -55,6 +55,7 @@ class PSGAdmin(admin.ModelAdmin):
 class WaiverAdmin(admin.ModelAdmin):
     list_display = ('email', 'first_name', 'last_name')
     search_fields = ('membership__user__email', 'membership__user__profile__first_name', 'membership__user__profile__last_name')
+    readonly_fields = ('membership',)
 
     def email(self, obj):
         return obj.membership.user.email
