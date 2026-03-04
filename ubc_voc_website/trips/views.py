@@ -53,10 +53,7 @@ def trips(request):
         if trip.status == Trip.TripStatus.CANCELLED:
             continue
 
-        if not trip.end_time:
-            end_time = trip.start_time + datetime.timedelta(hours=1)
-        else:
-            end_time = trip.end_time
+        end_time = trip.end_time if trip.end_time else trip.start_time + datetime.timedelta(hours=1)
 
         # This is to avoid long term events like "Journal Submissions Open" from cluttering the calendar
         # Future improvement could be to create a new "Announcements" class for such events so they are not classified as trips
@@ -423,6 +420,14 @@ def clubroom_calendar(request):
             "id", "name", "start_time", "end_time"
         )
         for event in upcoming_clubroom_events:
+            # This is to avoid long term events like "Journal Submissions Open" from cluttering the calendar
+            # Future improvement could be to create a new "Announcements" class for such events so they are not classified as trips
+            # Also, create a better long term solution for "recurring" trips that happen once a week for several months
+            end_time = event.end_time if event.end_time else event.start_time + datetime.timedelta(hours=1)
+            duration = end_time - event.start_time
+            if duration > datetime.timedelta(days=7):
+                continue
+
             events_calendar.append({
                 "id": event["id"],
                 "title": event["name"],
