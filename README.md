@@ -6,19 +6,23 @@
     ```
     pip install -r requirements.txt
     ```
-4. Create a superuser (admin) login
+4. Create the database tables
+    ```
+    python manage.py migrate
+    ```
+5. Create a superuser (admin) login
    ```sh
     python manage.py createsuperuser
    ```
    Follow the prompts to set an email and password.
 
-5. Run the development server:
+6. Run the development server:
    ```sh
     python manage.py runserver
    ```
    Log in, then check the running terminal for the link to verify your email.
 
-6. Navigate to localhost8000/admin. <br>
+7. Navigate to localhost:8000/admin. <br>
 
    This is the Django admin site, which lets you manually edit the contents of the database tables.
    
