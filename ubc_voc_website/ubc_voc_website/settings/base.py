@@ -86,6 +86,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'machina.apps.forum_permission.middleware.ForumPermissionMiddleware',
     'ubc_voc_website.middleware.MessageBoardMembershipMiddleware',
+    'ubc_voc_website.middleware.AdminPageMiddleware',
 ]
 
 ROOT_URLCONF = 'ubc_voc_website.urls'
