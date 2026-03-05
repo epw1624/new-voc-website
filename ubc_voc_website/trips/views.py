@@ -423,8 +423,8 @@ def clubroom_calendar(request):
             # This is to avoid long term events like "Journal Submissions Open" from cluttering the calendar
             # Future improvement could be to create a new "Announcements" class for such events so they are not classified as trips
             # Also, create a better long term solution for "recurring" trips that happen once a week for several months
-            end_time = event.end_time if event.end_time else event.start_time + datetime.timedelta(hours=1)
-            duration = end_time - event.start_time
+            end_time = event["end_time"] if event["end_time"] else event["start_time"] + datetime.timedelta(hours=1)
+            duration = end_time - event["start_time"]
             if duration > datetime.timedelta(days=7):
                 continue
 
