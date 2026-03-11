@@ -4,6 +4,8 @@ env/
 media/
 staticfiles
 .env
+.vscode
+
 
 data_migration/
 whoosh_index/

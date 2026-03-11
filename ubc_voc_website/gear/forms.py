@@ -41,7 +41,6 @@ class GearHourForm(forms.ModelForm):
 
     start_date = forms.DateField(
         required=True,
-        initial=timezone.localdate(),
         widget=forms.TextInput(attrs={'class': 'flatpickr-date'}),
         label="First day (recurring weekly)"
     )
@@ -52,7 +51,6 @@ class GearHourForm(forms.ModelForm):
     )
     start_time = forms.TimeField(
         required=True,
-        initial=timezone.now().strftime('%I:%M %p'),
         input_formats=['%I:%M %p'],
         widget=forms.TextInput(attrs={'class': 'flatpickr-timeonly'})
     )
@@ -60,7 +58,6 @@ class GearHourForm(forms.ModelForm):
         required=True,
         initial=60
     )
-
 
 class CancelledGearHourForm(forms.ModelForm):
     class Meta:
@@ -96,6 +93,10 @@ class RentalForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['member'].label_from_instance = self.get_profile_label
 
+        today = timezone.localtime(timezone.now()).date()
+        self.fields["start_date"].initial = today
+        self.fields["due_date"].initial = today + datetime.timedelta(days=7)
+
     @staticmethod
     def get_profile_label(user):
         try:
@@ -112,7 +113,11 @@ class RentalForm(forms.ModelForm):
     )
 
     member = forms.ModelChoiceField(
-        queryset=User.objects.filter(membership__active=True).distinct().exclude(membership__type__in=["H", "I"]), # Exclude both types of honorary members
+        queryset=User.objects.filter(
+                membership__active=True
+            ).distinct()
+            .exclude(membership__type__in=["H", "I"]) # Exclude both types of honorary members
+            .select_related("profile"), 
         label="Member Name",
         widget=forms.Select(attrs={"id": "member-select"}),
         required=True
@@ -121,12 +126,10 @@ class RentalForm(forms.ModelForm):
     start_date = forms.DateField(
         required=True,
         widget=forms.DateInput(attrs={'type': 'date'}),
-        initial=datetime.datetime.today()
     )
     due_date = forms.DateField(
         required=True,
         widget=forms.DateInput(attrs={'type': 'date'}),
-        initial=datetime.datetime.today() + datetime.timedelta(days=7)
     )
     what = forms.CharField(
         required=True,
