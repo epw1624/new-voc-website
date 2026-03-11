@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Photo Gallery{% endblock %}
+
+{% block content %}
+<style>
+    /* Archive Header */
+    .gallery-header {
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 1rem;
+    }
+
+    /* The Grid */
+    .album-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+
+    /* Album Card Styling */
+    .album-card {
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        transition: transform 0.2s, box-shadow 0.2s;
+        overflow: hidden;
+        border: 1px solid #e1e4e8;
+    }
+
+    .album-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    }
+
+    /* The Image Container */
+    .album-cover-container {
+        width: 100%;
+        height: 180px;
+        background-color: #f6f8fa;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .album-cover-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Folder Info */
+    .album-info {
+        padding: 1.25rem;
+    }
+
+    .album-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin: 0;
+        color: #1a1a1a;
+        /* Handle long album names from G2 */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .photo-count {
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 0.25rem;
+    }
+</style>
+
+<div class="container">
+    <h2>Photo Gallery</h2>
+
+    <div class="album-grid">
+        {% for album in albums %}
+            <a href="{% url 'gallery_album' album.album %}" class="album-card">
+                <div class="album-cover-container">
+                    {% if album.cover_image %}
+                        {# Since cover_image is a string from Subquery, we build the S3 URL manually #}
+                        {# Replace 'your-bucket-name' and 'region' with your actual AWS details #}
+                        <img src="https://your-bucket-name.s3.your-region.amazonaws.com/{{ album.cover_image }}" 
+                             alt="{{ album.album }}" 
+                             loading="lazy">
+                    {% else %}
+                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #ccc;">
+                            <span>No Images</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="album-info">
+                    <h3 class="album-title">{{ album.album }}</h3>
+                    <p class="photo-count">{{ album.photo_count }} items</p>
+                </div>
+            </a>
+        {% empty %}
+            <div class="alert alert-info">No albums found in the database.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
