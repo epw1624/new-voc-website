@@ -14,7 +14,6 @@ from machina import MACHINA_MAIN_STATIC_DIR, MACHINA_MAIN_TEMPLATE_DIR
 import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
@@ -219,3 +218,9 @@ API_KEY = os.getenv("API_KEY")
 # Settings for MailChimp integration
 MAILCHIMP_API_KEY = os.getenv("MAILCHIMP_API_KEY")
 MAILCHIMP_LIST_ID = os.getenv("MAILCHIMP_LIST_ID")
+
+# Settings for S3 access for legacy gallery
+S3_ACCESS_KEY = os.getenv("S3_ACCESS_KEY")
+S3_SECRET_KEY = os.getenv("S3_SECRET_KEY")
+GALLERY_S3_BUCKET_NAME= os.getenv("GALLERY_S3_BUCKET_NAME")
+AWS_REGION_NAME = os.getenv("AWS_REGION_NAME")

@@ -78,6 +78,7 @@
                                 {% if request.user|is_member %}
                                     <li><a class="dropdown-item" href="{% url 'members' %}">Member List</a></li>
                                     <li><a class="dropdown-item" href="{% url 'forum:index' %}">Message Board</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'gallery_album_index_page' %}">Photo Gallery</a></li>
                                 {% else %}
                                     <li><a class="dropdown-item" href="{% url 'join' %}">Join the VOC</a></li>
                                 {% endif %}

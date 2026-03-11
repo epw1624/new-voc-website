@@ -82,16 +82,11 @@
         {% for album in albums %}
             <a href="{% url 'gallery_album' album.album %}" class="album-card">
                 <div class="album-cover-container">
-                    {% if album.cover_image %}
-                        {# Since cover_image is a string from Subquery, we build the S3 URL manually #}
-                        {# Replace 'your-bucket-name' and 'region' with your actual AWS details #}
-                        <img src="https://your-bucket-name.s3.your-region.amazonaws.com/{{ album.cover_image }}" 
-                             alt="{{ album.album }}" 
-                             loading="lazy">
+                    {{ album.cover_url }}
+                    {% if album.cover_url %}
+                        <img src="{{ album.cover_url }}" alt="{{ album.album }}" loading="lazy">
                     {% else %}
-                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #ccc;">
-                            <span>No Images</span>
-                        </div>
+                        <div class="no-image">No Cover</div>
                     {% endif %}
                 </div>
                 <div class="album-info">

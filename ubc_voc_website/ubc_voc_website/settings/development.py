@@ -1,4 +1,10 @@
 from .base import *
+from dotenv import load_dotenv
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+env_path = BASE_DIR / '..' / '.env'
+load_dotenv(dotenv_path=env_path)
 
 DEBUG = True
 ALLOWED_HOSTS = []
