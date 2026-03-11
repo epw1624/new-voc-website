@@ -121,12 +121,12 @@ class RentalForm(forms.ModelForm):
     start_date = forms.DateField(
         required=True,
         widget=forms.DateInput(attrs={'type': 'date'}),
-        initial=timezone.localdate()
+        initial=datetime.datetime.today()
     )
     due_date = forms.DateField(
         required=True,
         widget=forms.DateInput(attrs={'type': 'date'}),
-        initial=timezone.localdate() + datetime.timedelta(days=7)
+        initial=datetime.datetime.today() + datetime.timedelta(days=7)
     )
     what = forms.CharField(
         required=True,
