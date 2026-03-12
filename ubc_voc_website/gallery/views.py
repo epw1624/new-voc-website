@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.db.models import Count, OuterRef, Subquery
 from django.shortcuts import render
 
@@ -13,7 +14,13 @@ def gallery_album_index_page(request):
         album=OuterRef("album")
     ).values("image")[:1]
 
-    albums = list(albums.annotate(cover_image=Subquery(album_cover_images)))
+    albums = albums.annotate(cover_image=Subquery(album_cover_images))
+
+    paginator = Paginator(albums, 25) 
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    albums = list(page_obj.object_list)
 
     storage = LegacyGalleryStorage()
 
@@ -23,7 +30,10 @@ def gallery_album_index_page(request):
         else:
             album["cover_url"] = None
 
-    return render(request, "gallery/album_index_page.html", {"albums": albums})
+    return render(request, "gallery/album_index_page.html", {
+        "albums": albums,
+        "page_obj": page_obj
+    })
 
 def gallery_album(request, album):
     photos = GalleryPhoto.objects.filter(album=album).order_by('id')

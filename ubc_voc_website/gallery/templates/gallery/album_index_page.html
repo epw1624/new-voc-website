@@ -82,11 +82,10 @@
         {% for album in albums %}
             <a href="{% url 'gallery_album' album.album %}" class="album-card">
                 <div class="album-cover-container">
-                    {{ album.cover_url }}
                     {% if album.cover_url %}
-                        <img src="{{ album.cover_url }}" alt="{{ album.album }}" loading="lazy">
+                        <img src="{{ album.cover_url }}" alt="{{ album.album }}" crossorigin="anonymous" loading="lazy">
                     {% else %}
-                        <div class="no-image">No Cover</div>
+                        <div class="no-image">No Image</div>
                     {% endif %}
                 </div>
                 <div class="album-info">
@@ -98,5 +97,25 @@
             <div class="alert alert-info">No albums found in the database.</div>
         {% endfor %}
     </div>
+
+    {% if page_obj.has_other_pages %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
 </div>
 {% endblock %}
