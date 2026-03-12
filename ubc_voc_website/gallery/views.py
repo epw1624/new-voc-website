@@ -37,7 +37,6 @@ def gallery_album_index_page(request):
 
 def gallery_album(request, album):
     photos = GalleryPhoto.objects.filter(album=album).order_by('id')
-    
     return render(request, 'gallery/album.html', {
         'album': album,
         'photos': photos

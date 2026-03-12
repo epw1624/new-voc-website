@@ -1,27 +1,35 @@
 {% extends "base.html" %}
 
-<style>
-    .photo-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 15px;
-    }
-    .photo-item img {
-        width: 100%;
-        height: auto;
-        border-radius: 4px;
-        display: block;
-    }
-</style>
+{% block title %}Album {{ album }}{% endblock %}
 
-<h2>Album: {{ album_name|title }}</h2>
-<a href="{% url 'gallery_album_index_page' %}">&larr; Back to Albums</a>
+{% block head_content %}
+    <style>
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .photo-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            display: block;
+        }
+    </style>
+{% endblock %}
 
-<div class="photo-grid">
-    {% for photo in photos %}
-        <div class="photo-item">
-            <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
-            <p>{{ photo.title }}</p>
+{% block content %}
+    <div class="container">
+        <h2>Album: {{ album }}</h2>
+        <a href="{% url 'gallery_album_index_page' %}">&larr; Back to Albums</a>
+
+        <div class="photo-grid">
+            {% for photo in photos %}
+                <div class="photo-item">
+                    <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
+                    <p>{{ photo.title }}</p>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-</div>
+    </div>
+{% endblock %}

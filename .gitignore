@@ -9,3 +9,6 @@ staticfiles
 
 data_migration/
 whoosh_index/
+
+reconcile_gallery.py
+

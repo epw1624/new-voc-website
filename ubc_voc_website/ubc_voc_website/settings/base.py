@@ -222,5 +222,5 @@ MAILCHIMP_LIST_ID = os.getenv("MAILCHIMP_LIST_ID")
 # Settings for S3 access for legacy gallery
 S3_ACCESS_KEY = os.getenv("S3_ACCESS_KEY")
 S3_SECRET_KEY = os.getenv("S3_SECRET_KEY")
-GALLERY_S3_BUCKET_NAME= os.getenv("GALLERY_S3_BUCKET_NAME")
+GALLERY_S3_BUCKET_NAME = os.getenv("GALLERY_S3_BUCKET_NAME")
 AWS_REGION_NAME = os.getenv("AWS_REGION_NAME")
