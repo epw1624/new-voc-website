@@ -3,7 +3,7 @@ from .storage import LegacyGalleryStorage
 
 class GalleryPhoto(models.Model):
     title = models.CharField(max_length=255, blank=True)
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField(max_length=1024, blank=True, null=True)
     album = models.CharField(max_length=255, db_index=True, blank=True, null=True)
     image = models.ImageField(storage=LegacyGalleryStorage())
 
