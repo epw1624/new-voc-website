@@ -23,7 +23,7 @@ def gallery_album_index_page(request):
 
     albums = albums.annotate(cover_image=Subquery(album_cover_images))
 
-    paginator = Paginator(albums, 25) 
+    paginator = Paginator(albums, 16) 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 

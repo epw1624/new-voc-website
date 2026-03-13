@@ -4,6 +4,9 @@ SELECT
     i.g_description AS description,
     f.g_pathComponent AS filename,
     TRIM(BOTH '/' FROM CONCAT_WS('/', 
+        p6.g_pathComponent,
+        p5.g_pathComponent,
+        p4.g_pathComponent,
         p3.g_pathComponent, 
         p2.g_pathComponent, 
         p1.g_pathComponent
@@ -12,10 +15,22 @@ FROM g2_Item i
 JOIN g2_FileSystemEntity f ON i.g_id = f.g_id
 JOIN g2_ChildEntity c1 ON i.g_id = c1.g_id
 JOIN g2_FileSystemEntity p1 ON c1.g_parentId = p1.g_id
+
 LEFT JOIN g2_ChildEntity c2 ON c1.g_parentId = c2.g_id
 LEFT JOIN g2_FileSystemEntity p2 ON c2.g_parentId = p2.g_id AND p2.g_id != 1
+
 LEFT JOIN g2_ChildEntity c3 ON c2.g_parentId = c3.g_id
 LEFT JOIN g2_FileSystemEntity p3 ON c3.g_parentId = p3.g_id AND p3.g_id != 1
+
+LEFT JOIN g2_ChildEntity c4 ON c3.g_parentId = c4.g_id
+LEFT JOIN g2_FileSystemEntity p4 ON c4.g_parentId = p4.g_id AND p4.g_id != 1
+
+LEFT JOIN g2_ChildEntity c5 ON c4.g_parentId = c5.g_id
+LEFT JOIN g2_FileSystemEntity p5 ON c5.g_parentId = p5.g_id AND p5.g_id != 1
+
+LEFT JOIN g2_ChildEntity c6 ON c5.g_parentId = c6.g_id
+LEFT JOIN g2_FileSystemEntity p6 ON c6.g_parentId = p6.g_id AND p6.g_id != 1
+
 WHERE i.g_canContainChildren = 0;
 """
 
