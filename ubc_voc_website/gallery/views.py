@@ -6,7 +6,9 @@ from urllib.parse import unquote
 
 from .models import GalleryPhoto
 from .storage import LegacyGalleryStorage
+from ubc_voc_website.decorators import Members
 
+@Members
 def gallery_album_index_page(request):
     query = request.GET.get("q")
 
@@ -42,6 +44,7 @@ def gallery_album_index_page(request):
         "page_obj": page_obj
     })
 
+@Members
 def gallery_album(request, album):
     album = unquote(album)
     photos = GalleryPhoto.objects.filter(album=album).order_by('id')
