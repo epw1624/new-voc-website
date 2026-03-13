@@ -86,23 +86,24 @@
 </style>
 
 <div class="container">
-    <h2>Photo Gallery</h2>
-
-    <form method="GET" action="" class="search-container w-100">
-        <div class="input-group">
-            <input type="text" name="q" class="form-control search-input" placeholder="Search albums..." value="{{ request.GET.q }}">
-            <button class="btn btn-primary search-btn" type="submit">
-                <i class="bi bi-search"></i> Search
-            </button>
-        </div>
-        {% if request.GET.q %}
-            <div class="mt-2">
-                <a href="{% url 'gallery_album_index_page' %}" class="text-muted small text-decoration-none">
-                    &times; Clear search results
-                </a>
+    <div class="d-flex justify-content-between">
+        <h2>Photo Gallery</h2>
+        <form method="GET" action="" class="search-container w-100">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control search-input" placeholder="Search albums..." value="{{ request.GET.q }}">
+                <button class="btn btn-primary search-btn" type="submit">
+                    <i class="bi bi-search"></i> Search
+                </button>
             </div>
-        {% endif %}
-    </form>
+            {% if request.GET.q %}
+                <div class="mt-2">
+                    <a href="{% url 'gallery_album_index_page' %}" class="text-muted small text-decoration-none">
+                        &times; Clear search results
+                    </a>
+                </div>
+            {% endif %}
+        </form>
+    </div>
 
     <div class="album-grid">
         {% for album in albums %}
