@@ -2,6 +2,8 @@ from django.core.paginator import Paginator
 from django.db.models import Count, OuterRef, Subquery
 from django.shortcuts import render
 
+from urllib.parse import unquote
+
 from .models import GalleryPhoto
 from .storage import LegacyGalleryStorage
 
@@ -41,6 +43,7 @@ def gallery_album_index_page(request):
     })
 
 def gallery_album(request, album):
+    album = unquote(album)
     photos = GalleryPhoto.objects.filter(album=album).order_by('id')
     return render(request, 'gallery/album.html', {
         'album': album,
