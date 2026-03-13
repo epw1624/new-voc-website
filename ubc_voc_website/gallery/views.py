@@ -6,9 +6,14 @@ from .models import GalleryPhoto
 from .storage import LegacyGalleryStorage
 
 def gallery_album_index_page(request):
+    query = request.GET.get("q")
+
     albums = GalleryPhoto.objects.values("album").annotate(
         photo_count=Count("id")
     ).order_by("album")
+
+    if query:
+        albums = albums.filter(album__icontains=query)
 
     album_cover_images = GalleryPhoto.objects.filter(
         album=OuterRef("album")

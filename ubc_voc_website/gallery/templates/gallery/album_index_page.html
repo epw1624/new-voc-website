@@ -4,21 +4,34 @@
 
 {% block content %}
 <style>
-    /* Archive Header */
+    .search-container {
+        max-width: 500px;
+        margin-bottom: 2rem;
+    }
+    
+    .search-input {
+        border-radius: 20px 0 0 20px;
+        border: 1px solid #ced4da;
+        padding-left: 1.5rem;
+    }
+    
+    .search-btn {
+        border-radius: 0 20px 20px 0;
+        padding-right: 1.5rem;
+    }
+
     .gallery-header {
         margin-bottom: 2rem;
         border-bottom: 2px solid #eee;
         padding-bottom: 1rem;
     }
 
-    /* The Grid */
     .album-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 2rem;
     }
 
-    /* Album Card Styling */
     .album-card {
         text-decoration: none;
         color: inherit;
@@ -37,7 +50,6 @@
         box-shadow: 0 10px 15px rgba(0,0,0,0.1);
     }
 
-    /* The Image Container */
     .album-cover-container {
         width: 100%;
         height: 180px;
@@ -52,7 +64,6 @@
         object-fit: cover;
     }
 
-    /* Folder Info */
     .album-info {
         padding: 1.25rem;
     }
@@ -62,7 +73,6 @@
         font-size: 1.1rem;
         margin: 0;
         color: #1a1a1a;
-        /* Handle long album names from G2 */
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -77,6 +87,22 @@
 
 <div class="container">
     <h2>Photo Gallery</h2>
+
+    <form method="GET" action="" class="search-container w-100">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control search-input" placeholder="Search albums..." value="{{ request.GET.q }}">
+            <button class="btn btn-primary search-btn" type="submit">
+                <i class="bi bi-search"></i> Search
+            </button>
+        </div>
+        {% if request.GET.q %}
+            <div class="mt-2">
+                <a href="{% url 'gallery_album_index_page' %}" class="text-muted small text-decoration-none">
+                    &times; Clear search results
+                </a>
+            </div>
+        {% endif %}
+    </form>
 
     <div class="album-grid">
         {% for album in albums %}
