@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Photo Gallery{% endblock %}
+
+{% block content %}
+<style>
+    .search-container {
+        max-width: 500px;
+        margin-bottom: 2rem;
+    }
+    
+    .search-input {
+        border-radius: 20px 0 0 20px;
+        border: 1px solid #ced4da;
+        padding-left: 1.5rem;
+    }
+    
+    .search-btn {
+        border-radius: 0 20px 20px 0;
+        padding-right: 1.5rem;
+    }
+
+    .gallery-header {
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 1rem;
+    }
+
+    .album-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+
+    .album-card {
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        transition: transform 0.2s, box-shadow 0.2s;
+        overflow: hidden;
+        border: 1px solid #e1e4e8;
+    }
+
+    .album-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    }
+
+    .album-cover-container {
+        width: 100%;
+        height: 180px;
+        background-color: #f6f8fa;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .album-cover-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .album-info {
+        padding: 1.25rem;
+    }
+
+    .album-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin: 0;
+        color: #1a1a1a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .photo-count {
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 0.25rem;
+    }
+</style>
+
+<div class="container">
+    <div class="d-flex justify-content-between">
+        <h2>Photo Gallery</h2>
+        <form method="GET" action="" class="search-container w-100">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control search-input" placeholder="Search albums..." value="{{ request.GET.q }}">
+                <button class="btn btn-primary search-btn" type="submit">
+                    <i class="bi bi-search"></i> Search
+                </button>
+            </div>
+            {% if request.GET.q %}
+                <div class="mt-2">
+                    <a href="{% url 'gallery_album_index_page' %}" class="text-muted small text-decoration-none">
+                        &times; Clear search results
+                    </a>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="album-grid">
+        {% for album in albums %}
+            <a href="{% url 'gallery_album' album.album %}" class="album-card">
+                <div class="album-cover-container">
+                    {% if album.cover_url %}
+                        <img src="{{ album.cover_url }}" alt="{{ album.album }}" crossorigin="anonymous" loading="lazy">
+                    {% else %}
+                        <div class="no-image">No Image</div>
+                    {% endif %}
+                </div>
+                <div class="album-info">
+                    <h3 class="album-title">{{ album.album }}</h3>
+                    <p class="photo-count">{{ album.photo_count }} items</p>
+                </div>
+            </a>
+        {% empty %}
+            <div class="alert alert-info">No albums found in the database.</div>
+        {% endfor %}
+    </div>
+
+    {% if page_obj.has_other_pages %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+</div>
+{% endblock %}
