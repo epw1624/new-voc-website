@@ -38,6 +38,9 @@ def about(request):
 def how_to_join(request):
     return render(request, "how_to_join.html")
 
+def membership_handbook(request):
+    return render(request, "membership_handbook.html")
+
 @csrf_exempt
 @Members
 def quill_image_upload(request):

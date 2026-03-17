@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Membership Handbook{% endblock %}
+
+{% block content %}
+<style>
+    .handbook-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .handbook-container img.header-img {
+        width: 100%;
+        height: auto;
+        border-radius: 0.375rem;
+    }
+
+    .handbook-container details {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        margin-bottom: 1rem;
+        border-radius: 0.375rem;
+    }
+
+    .handbook-container summary {
+        padding: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        background: #fff;
+        list-style: none;
+        position: relative;
+        border-radius: 0.375rem;
+    }
+
+    .handbook-container summary::-webkit-details-marker { display: none; }
+    .handbook-container summary::after {
+        content: '+';
+        float: right;
+        font-size: 1.25rem;
+        color: #6c757d;
+    }
+
+    .handbook-container details[open] > summary::after { content: '−'; }
+    .handbook-container details[open] > summary {
+        border-bottom: 1px solid #dee2e6;
+        background: #e9ecef;
+    }
+
+    .handbook-container .inner-content {
+        padding: 1.25rem;
+    }
+
+    .handbook-container .inner-content details {
+        background: #fff;
+        margin-top: 0.75rem;
+    }
+
+    .handbook-footer {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 3rem;
+        padding-top: 1rem;
+        border-top: 1px solid #dee2e6;
+    }
+</style>
+
+<div class="handbook-container">
+    <img src="{% static 'ubc_voc_website/handbook_cover.jpg' %}" alt="VOC Handbook" class="header-img">
+
+    <p>The Varsity Outdoor Club (VOC) is dedicated to those who want to explore the outdoors around BC and elsewhere in the world. This membership handbook will orient you to club operations and get you outdoors safely.</p>
+    <p>The VOC is its members - without you there is no club. Welcome to the VOC, we hope you enjoy the ride.</p>
+
+    <details>
+        <summary>VOC Essentials for New Members</summary>
+        <div class="inner-content">
+            <p>The VOC is about meeting people, making friends, learning, teaching and going up pointy things. Our club is open to anyone; UBC students, faculty, and staff, as well as other members of the community not affiliated with UBC.</p>
+            
+            <p>A good first step is to set-up your <a href="{% url 'join' %}">account</a>. After that, introduce yourself in our <a href="https://discord.gg/VGXKEUGGRu">Discord server</a>, or pop by our <a href="{% url 'about' %}">clubroom</a></p>
+
+            <details>
+                <summary>Trip Agenda</summary>
+                <div class="inner-content">
+                    The <a href="{% url 'trips' %}">Trip Agenda</a> is where the bulk of VOC trips and events are planned. 
+                    Check it often, trips often are posted on short notice!
+                    See the "What you need to know about VOC Trips" section below for more information.
+                </div>
+            </details>
+
+            <details>
+                <summary>Clubroom & Gear</summary>
+                <div class="inner-content">
+                    <p>The VOC has its own clubroom in the basement of the AMS Student Nest. There are weekly <a href="{% url 'clubroom_calendar' %}">Gear Hours</a> for gear borrowing.</p>
+                    <p><strong>Gear Library:</strong> Borrow gear only during official hours from a quartermaster.</p>
+                    <p><strong>Repair Workbench:</strong> Available for fixing equipment or waxing skis (small donation requested).</p>
+                    <p>
+                        Note that gear rental and repair may not be available outside of designated <a href="{% url 'clubroom_calendar' %}">Gear Hours</a>, 
+                        but the clubroom is often open throughout the day if you'd like to come hang out!
+                    </p>
+                </div>
+            </details>
+
+            <details>
+                <summary>The VOC Wiki</summary>
+                <div class="inner-content">
+                    <p>
+                        <a href="https://wiki.ubc-voc.com">The VOC Wiki</a> is years of accumulated knowledge and VOC experience. 
+                        Create your own wiki account to add to existing pages or create new ones
+                    </p>
+                    <ul>
+                        <li><a href="https://wiki.ubc-voc.com/Trip_Ideas">Trip Ideas</a></li>
+                        <li><a href="https://wiki.ubc-voc.com/Gear_lists">Trip Packing Lists</a></li>
+                        <li><a href="https://wiki.ubc-voc.com/Constitution">VOC Constitution</a></li>
+                    </ul>
+                </div>
+            </details>
+
+            <details>
+                <summary>Trip Reports</summary>
+                <div class="inner-content">
+                    <p>
+                        We encourage people to write trip reports to share their stories and any information that may be relevant to others attempting the same objective. 
+                        These are posted and sorted here on the VOC website for easy browsing. If you're looking for trip ideas, <a href="/trip-reports/">this is a great place to start.</a> 
+                    </p>
+                </div>
+            </details>
+        </div>
+    </details>
+
+    <details>
+        <summary>What you need to know about VOC Trips</summary>
+        <div class="inner-content">
+            <p>
+                The VOC is very active year-round, and there are typically several trip to choose from any given weekend of the year. 
+                While most trips are day or weekend trips, extended trips venturing further afield are common during holiday breaks and summer.
+            </p>
+            <p>See the <a href="{% url 'trips' %}">Trip Agenda</a> to view and sign up for upcoming trips.</p>
+
+            <details>
+                <summary>Signing Up For Trips</summary>
+                <div class="inner-content">
+                    <p>There are 3 classes of signups for most trips:</p>
+                    <ul>
+                        <li><strong>Interested:</strong> “This trip looks like fun, and I'd be keen to go”</li>
+                        <li><strong>Committed:</strong> “I definitely want to go and have no other obligations during that time”</li>
+                        <li><strong>Going:</strong> “I have attended the pre-trip meeting, there is a car spot for me, and the trip leader has agreed that I am experienced enough to join”</li>
+                    </ul>
+                    <div class="alert alert-warning">
+                        <span class="alert-heading fw-bold">Pre-trip meetings</span>
+                        It is very important to attend the pre-trip meeting held in the week prior to departure. 
+                        Here you will discuss trip objectives, logistics, required gear, skills, and fitness. 
+                        This is also when the trip leader decides who will come on the trip. 
+                        Often the limiting factor is car spaces available, but sometimes people may be turned away because the trip is too challenging for their skill level. 
+                        If you can't make it to the meeting, either contact the trip leader in advance, or send a representative.
+                    </div>
+                </div>
+            </details>
+
+            <details>
+                <summary>Trip Guidelines</summary>
+                <div class="inner-content">
+                    <p>
+                        It is <b>your responsibility</b> to ensure that you are prepared for every trip you go on. 
+                        This includes physical and mental stamina, gear, and technical skills. If you are unsure about any aspect of the trip <b>ASK</b>. 
+                        It is important, for everyone's safety, that you are very honest about your previous experience. 
+                        VOC trip leaders are members just like you, not professional guides. People will be friendly and helpful, but expect to take care of yourself.
+                    </p>
+                    <p>
+                        <a href="https://wiki.ubc-voc.com/Gear_lists">Here are example packing lists</a> for several different types and lengths of trips. 
+                        If you are at all unsure about what to bring, consult these lists, ask the trip leader or ask on the message board.
+                    </p>
+                    <div class="alert alert-warning">
+                        <span class="alert-heading fw-bold">Emergency Contact</span><br>
+                        Be sure to leave a trip plan with a responsible person in town who can activate emergency services if you do not return on time. 
+                        Be sure to include car license plate, make, model, and parking location, as well as your intended route and expected return time. 
+                        Be explicit about what you would like them to do if they do not hear from you.
+                    </div>
+                    <p>
+                        Everyone is expected to chip in for gas for the drivers. Check out the <a href="https://wiki.ubc-voc.com/Driver_reimbursement_guidelines">Driver Reimbursement Guidelines</a>.
+                    </p>
+                </div>
+            </details>
+
+            <details>
+                <summary>Notes for Trip Leaders</summary>
+                <div class="inner-content">
+                    <p>Trip Organizers and Trip Leaders are the bread and jam of the club. Anyone can suggest/organize/lead trips.</p>
+                    <ul>
+                        <li><a href="https://wiki.ubc-voc.com/Trip_guidelines#For_Trip_Organizers">Trip Leader Guidelines</a> explain what's expected of trip leaders</li>
+                        <li><a href="https://wiki.ubc-voc.com/Trip_ideas">The Big List of Trip Ideas</a></li>
+                    </ul>
+                </div>
+            </details>
+
+
+            <div class="alert alert-warning">
+                <span class="alert-heading fw-bold">"Beginner Friendly" Trips</span><br>
+                Few terms have caused more confusion, pain and suffering than “Beginner Friendly”. 
+                This can be <a href="https://wiki.ubc-voc.com/Beginner_Friendly">interpreted several ways</a>, you're responsible for what you get into.
+            </div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Using the VOC Gear Library</summary>
+        <div class="inner-content">
+            <p>
+                The selection of equipment available through the club allows all members, novice and experienced alike, to try different outdoor sports without the financial commitment of purchasing their own gear. 
+                The equipment belongs to everyone and is available to members throughout the year on a first come, first served basis. 
+                There is no fee for this service - all we require is a refundable cash deposit.
+            </p>
+            <p>
+                While the quartermasters try to do their best to maintain club gear, it is ultimately your responsibility to ensure that everything works and fits before leaving the clubroom. 
+                As a courtesy, please ensure that all gear is returned on time and in good condition. If something breaks, please let the QM know. 
+                During peak season it's club policy to give gear priorty to participants on club-organized activities.
+            </p>
+            <div class="alert alert-info">
+                <span class="alert-heading fw-bold">Workhikes: The cost of gear</span><br>
+                We ask each of our members to give back to the club each year to maintain their gear rental privileges, and to keep the club running smoothly. 
+                While some workhikes involve actual hiking and trail or hut maintenance, volunteering to help in any way such as waxing club skis or serving beer at a social event will count. 
+                Some workhikes / volunteering oppertunities are posted on the trip agenda, but if you're looking for a way to give back, just ask a quartermaster, and we'll put you to work. 
+                Fun fact! Leading a VOC trip counts as a workhike!
+            </div>
+            <p>
+                Find the Gear Hours schedule on our <a href="{% url 'clubroom_calendar' %}">Clubroom Calendar</a>... check it before you come in, it changes frequently!
+            </p>
+            <p>A full list of everything we rent the the deposits required is available <a href="https://wiki.ubc-voc.com/Gear_rental">here</a></p>
+        </div>
+    </details>
+
+    <details>
+        <summary>A Brief History of the Club</summary>
+        <div class="inner-content">
+            <p>
+                The VOC had its start back in <b>1917</b>, when the “Mountaineering Club” was formalized at UBC's original location (near present day VGH). 
+                In these days, potential club members were required to ascend a peak equal in height to Grouse Mountain to become members.
+            </p>
+            <p>
+                In <b>1920</b>, the first club cabin was built on Grouse. In those early days, chaperones were present on mixed trips to “protect the honour of the fair sex”. 
+                Alcohol was forbidden at all club activities well into the 70's.
+            </p>
+            <p>
+                By the <b>1930</b>'s, the club's expeditions had spread farther afield, including such exotic destinations as Golden Ears and the Lions (the latter accessed by boat). 
+                By the 1940's, there was exploration in the Garibaldi area. A VOC party made the first winter ascent of Mt Garibaldi in 1944.
+            </p>
+            <p>
+                The <b>'50</b>'s arrived with an explosion of interest in skiing with the construction of a road up Seymour. 
+                As the number of capable skiers grew, a new tradition was born to the VOC. A desire to record the club's activities spawned the VOC Journal. 
+                First published in <b>1958</b>, it was just in time for the numerous first ascents made by club members during the late 50's and 60's. 
+                Several major expeditions were undertaken, including Mt Logan ('59) and the Himalaya ('64).
+            </p>
+            <p>
+                In the mid <b>'60</b>'s, the VOC constructed a large cabin in Whistler. It was intended to accommodate both downhill and cross country skiers. 
+                In time, the cabin grew too expensive to maintain, and the VOC turned over the rights to the cabin to the AMS. 
+                The money received (not without a fight!) from the handover was reinvested into new mountain huts, the first of which was constructed on Mt Brew across the valley from Whistler in <b>1982</b>.
+            </p>
+            <p>
+                <b>1969</b> saw the completion of the Sphinx Hut (now called Burton Hut). The hut began a post-exams annual pilgrimage and celebration to the terminal moraines of the Sphinx Glacier near Garibaldi Lake.
+            </p>
+            <p>
+                In the <b>'90</b>'s the VOC helped build and now maintains a new hut in the mountains surrounding Birkenhead Lake. 
+                The Brian Waddington Memorial Hut is located at the headwaters of Phelix Creek and is used mainly in the winter as a ski touring base.
+            </p>
+            <p>
+                There are always more projects on the horizon, but these will have to take place before we can include them in the history section. 
+                Read more about what the VOC is up-to today on our <a href="/trip-reports/">Trip Reports Page</a>.
+            </p>
+        </div>
+    </details>
+
+    <div class="handbook-footer">
+        Last Updated: March 17, 2026
+    </div>
+</div>
+{% endblock %}

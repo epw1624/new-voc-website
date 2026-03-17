@@ -19,7 +19,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from .views import about, home, how_to_join, quill_image_upload
+from .views import about, home, how_to_join, membership_handbook, quill_image_upload
 
 from machina import urls as machina_urls
 
@@ -33,6 +33,7 @@ urlpatterns = [
     path("gear/", include("gear.urls")),
     path('how-to-join/', how_to_join, name="how_to_join"),
     path("membership/", include("membership.urls")),
+    path("membership-handbook/", membership_handbook, name="membership_handbook"),
     path("message-board/", include(machina_urls)),
     path("photologue/", include("photologue.urls", namespace="photologue")),
     path("trips/", include("trips.urls")),
