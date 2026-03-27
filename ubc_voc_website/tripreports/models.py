@@ -17,7 +17,7 @@ from wagtail.models import Page
 from wagtail.snippets.models import register_snippet
 
 class TripReport(Page):
-    body = models.TextField()
+    body = models.TextField(blank=True, null=True)
     trip = models.ForeignKey(
         "trips.Trip",
         null=True,
@@ -46,13 +46,18 @@ class TripReport(Page):
         on_delete=models.SET_NULL,
         related_name="+"
     )
+    legacy_html = models.TextField(blank=True, null=True)
 
     def get_body_html(self):
         try:
             data = json.loads(self.body)
             return mark_safe(data.get("html", ""))
         except (json.JSONDecodeError, TypeError, AttributeError):
-            return self.body
+            if self.body:
+                return mark_safe(self.body)
+        
+        if self.legacy_html:
+            return mark_safe(self.legacy_html)
 
     def serve(self, request):
         if getattr(self, "is_private", False):

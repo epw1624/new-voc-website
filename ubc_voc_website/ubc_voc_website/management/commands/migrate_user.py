@@ -1,9 +1,9 @@
 """
 select id, email from members_table
 """
+from django.db.utils import IntegrityError
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
-from django.utils.crypto import get_random_string
 
 import csv
 from allauth.account.models import EmailAddress
@@ -20,19 +20,27 @@ class Command(BaseCommand):
             reader = csv.DictReader(f, fieldnames=["id", "email"])
 
             for row in reader:
-                user, created = User.objects.get_or_create(
-                    email=row['email'].strip(),
-                    defaults={
-                        'old_id': int(row["id"]),
-                        'is_active': True
-                    }
-                )
-                if created:
-                    user.set_password(get_random_string(20))
-                    user.save()
-                    self.stdout.write(self.style.SUCCESS(f"Created user {user.email}"))
-                else:
-                    self.stdout.write(f"User {user.email} already exists")
+                for row in reader:
+                    # 1. Clean the email immediately
+                    raw_email = row.get('email', '').strip().lower()
+                    if not raw_email:
+                        continue
+
+                    # 2. Manual check instead of get_or_create
+                    user = User.objects.filter(email__iexact=raw_email).first()
+
+                    if user:
+                        self.stdout.write(f"User {raw_email} already exists")
+                    else:
+                        try:
+                            user = User.objects.create(
+                                email=raw_email,
+                                # Add other fields here (first_name, last_name, etc.)
+                            )
+                            self.stdout.write(self.style.SUCCESS(f"Created user {raw_email}"))
+                        except IntegrityError:
+                            # This is a safety net in case of concurrent writes
+                            self.stdout.write(self.style.WARNING(f"Skipping {raw_email}: Integrity collision"))
 
                 email_obj, email_created = EmailAddress.objects.get_or_create(
                     user=user,

@@ -1,9 +1,30 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% load wagtailcore_tags %}
 {% load role_tags %}
 
 {% block title %}{{ page.title }}{% endblock %}
+
+{% block head_content %}
+    <link rel="stylesheet" href="{% static 'tripreports/css/legacy_trip_reports.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'tripreports/js/legacy_trip_reports.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Swiper !== 'undefined') {
+                var swipers = document.querySelectorAll('.su-slider, .su-carousel');
+                swipers.forEach(function(el) {
+                    new Swiper(el, {
+                        pagination: '.swiper-pagination',
+                        loop: true,
+                        calculateHeight: true
+                    });
+                });
+            }
+        });
+    </script>
+{% endblock %}
 
 {% block content %}
     <div class="container">

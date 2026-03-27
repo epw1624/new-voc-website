@@ -25,8 +25,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         path = "trip_reports_published.csv"
-        pdf_dir = "trip_report_pdfs/"
-        pdf_files = os.listdir(pdf_dir)
+        # pdf_dir = "trip_report_pdfs/"
+        # pdf_files = os.listdir(pdf_dir)
 
         parent = TripReportIndexPage.objects.first()
 
@@ -52,37 +52,36 @@ class Command(BaseCommand):
                     continue
 
                 if TripReport.objects.filter(old_id=int(row["ID"])).exists():
-                    self.stdout.write(f"Skipping '{row["post_title"]}' - report already exists")
+                    self.stdout.write(f"Skipping {row['post_title']} - report already exists")
                     continue
 
-                pdf = None
-                try:
-                    pdf_filename = next((p for p in pdf_files if p.startswith(f"{int(row['ID'])}_")), None)
-                    if pdf_filename:
-                        pdf_filepath = os.path.join(pdf_dir, pdf_filename)
-                        with open(pdf_filepath, 'rb') as pdf_file:
-                            pdf = Document(
-                                title=row["post_title"],
-                                file=File(pdf_file, name=pdf_filename)
-                            )
-                            pdf.save()
-                            self.stdout.write(self.style.SUCCESS(f"Attached pdf file for '{row["post_title"]}'"))
-                    else:
-                        missing_pdfs.add(int(row["ID"]))
-                        self.stdout.write(self.style.ERROR(f"No pdf found for '{row["post_title"]}'"))
-                        continue
-                except Exception as e:
-                    self.stdout.write(self.style.ERROR(f"Error processing pdf for '{row["post_title"]}': {e}"))
+                # pdf = None
+                # try:
+                #     pdf_filename = next((p for p in pdf_files if p.startswith(f"{int(row['ID'])}_")), None)
+                #     if pdf_filename:
+                #         pdf_filepath = os.path.join(pdf_dir, pdf_filename)
+                #         with open(pdf_filepath, 'rb') as pdf_file:
+                #             pdf = Document(
+                #                 title=row["post_title"],
+                #                 file=File(pdf_file, name=pdf_filename)
+                #             )
+                #             pdf.save()
+                #             self.stdout.write(self.style.SUCCESS(f"Attached pdf file for {row['post_title']}"))
+                #     else:
+                #         missing_pdfs.add(int(row["ID"]))
+                #         self.stdout.write(self.style.ERROR(f"No pdf found for {row['post_title']}"))
+                #         continue
+                # except Exception as e:
+                #     self.stdout.write(self.style.ERROR(f"Error processing pdf for {row['post_title']}: {e}"))
 
                 try:
                     trip_report = TripReport(
                         title=row["post_title"],
-                        slug=slugify(f"{row["post_title"]}-{row["ID"]}"),
-                        body=row["post_content"], # Important so the content of old trip reports is searchable, even if it is weirdly formatted
+                        slug=slugify(f"{row['post_title']}-{row['ID']}"),
                         owner=user,
                         old_id=int(row["ID"]),
                         first_published_at=datetime.strptime(row["post_date"], "%Y-%m-%d %H:%M:%S").replace(tzinfo=pacific_timezone),
-                        legacy_pdf=pdf,
+                        # legacy_pdf=pdf,
                         is_private=row["post_status"] == "private"
                     )
 
@@ -90,7 +89,7 @@ class Command(BaseCommand):
                     trip_report.save_revision().publish()
 
                 except Exception as e:
-                    self.stdout.write(self.style.ERROR(f"Failed to create trip report for '{row["post_title"]}': {e}"))
+                    self.stdout.write(self.style.ERROR(f"Failed to create trip report for {row['post_title']}: {e}"))
 
             self.stdout.write(self.style.SUCCESS(f"Published trip report migration complete"))
             self.stdout.write(self.style.WARNING(f"Orphaned emails: {orphaned_emails}"))
