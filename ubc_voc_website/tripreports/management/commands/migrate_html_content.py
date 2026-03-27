@@ -20,7 +20,12 @@ class Command(BaseCommand):
         base_dir = os.path.abspath(options['directory'])
         
         root_collection = Collection.get_first_root_node()
-        collection, _ = Collection.objects.get_or_create(name="Legacy Imports", parent=root_collection)
+        
+        collection = Collection.objects.filter(name="Legacy Imports").first()
+        
+        if not collection:
+            self.stdout.write("Creating 'Legacy Imports' collection...")
+            collection = root_collection.add_child(name="Legacy Imports")
 
         for folder_name in os.listdir(base_dir):
             folder_path = os.path.join(base_dir, folder_name)
