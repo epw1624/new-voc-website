@@ -30,22 +30,25 @@
             overflow-x: hidden;
             width: 100%;
         }
-        .html-content-wrapper * {
+        .html-content-wrapper *:not([class*="su-slider"]):not([class*="su-carousel"]):not([class*="swiper"]) {
             max-width: 100% !important;
             box-sizing: border-box !important;
-            height: auto !important;
         }
-        .html-content-wrapper img {
+        .html-content-wrapper img:not(.su-slider img):not(.su-carousel img) {
             max-width: 100% !important;
             height: auto !important;
             display: block;
             margin: 1rem auto;
         }
-        .html-content-wrapper div, 
+        .html-content-wrapper div:not([class*="su-"]):not([class*="swiper"]), 
         .html-content-wrapper p, 
-        .html-content-wrapper span {
+        .html-content-wrapper span:not([class*="su-"]) {
             width: auto !important; 
             height: auto !important;
+        }
+        .su-slider, .su-carousel {
+            max-width: 100% !important;
+            width: 100% !important;
         }
     </style>
 {% endblock %}
