@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load html_filters %}
+
 {% block title %}Profile ({{ profile.first_name }} {{ profile.last_name }}){% endblock %}
 
 {% block head_content %}
@@ -248,7 +250,7 @@
                     </div>
                     {% if not trip_report.legacy_pdf %}
                         <div class="card-body">
-                            {{ trip_report.body|safe|truncatewords:50 }}
+                            {{ trip_report.get_body_html|strip_images|truncatewords_html:50 }}
                         </div>
                     {% endif %}
                     <div class="card-footer text-end">

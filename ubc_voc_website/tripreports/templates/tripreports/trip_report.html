@@ -24,6 +24,30 @@
             }
         });
     </script>
+
+    <style>
+        .html-content-wrapper {
+            overflow-x: hidden;
+            width: 100%;
+        }
+        .html-content-wrapper * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            height: auto !important;
+        }
+        .html-content-wrapper img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+            margin: 1rem auto;
+        }
+        .html-content-wrapper div, 
+        .html-content-wrapper p, 
+        .html-content-wrapper span {
+            width: auto !important; 
+            height: auto !important;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -56,7 +80,9 @@
                 </div>
                 <object data="{{ page.legacy_pdf.url }}" width="100%" style="height: 80vh;"</object>></object>
             {% else %}
-                {{ page.get_body_html }}
+                <div class="html-content-wrapper" style="width: 100%;">
+                    {{ page.get_body_html }}
+                </div>
             {% endif %}
         </article>
 
