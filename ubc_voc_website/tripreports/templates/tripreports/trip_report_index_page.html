@@ -19,33 +19,37 @@
             });
         });
     </script>
+    <style>
+        .choices {
+            margin-bottom: 0;
+            max-width: 100%;
+        }
+        body, html {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center my-4">
-            <h2>Trip Reports</h2>
-            <div class="d-flex align-items-center">
-                <div class="btn-group rounded-pill border overflow-hidden me-3" role="group" style="background-color: #f8f9fa; height: 38px;">
-                    <a href="?view=card&page={{ reports.number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% for cat in request.GET.getlist.category %}&category={{ cat }}{% endfor %}" 
-                    class="btn btn-sm px-4 d-flex align-items-center border-0 {% if request.GET.view != 'list' %}btn-primary text-white{% else %}text-secondary{% endif %}"
-                    style="transition: none;" title="Grid View">
-                        <i class="fas fa-th-large fa-fw"></i>
-                    </a>
-                    <a href="?view=list&page={{ reports.number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% for cat in request.GET.getlist.category %}&category={{ cat }}{% endfor %}" 
-                    class="btn btn-sm px-4 d-flex align-items-center border-0 {% if request.GET.view == 'list' %}btn-primary text-white{% else %}text-secondary{% endif %}"
-                    style="transition: none;" title="List View">
-                        <i class="fas fa-list fa-fw"></i>
-                    </a>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center my-4 gap-3">
+            <h2 class="mb-0">Trip Reports</h2>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <div class="btn-group rounded-pill border overflow-hidden" role="group" style="background-color: #f8f9fa; height: 38px; flex-shrink: 0;">
+                    <a href="?view=card..." class="btn btn-sm px-3 d-flex align-items-center ..."><i class="fas fa-th-large"></i></a>
+                    <a href="?view=list..." class="btn btn-sm px-3 d-flex align-items-center ..."><i class="fas fa-list"></i></a>
                 </div>
+                
                 {% if request.user|is_member %}
-                    <a href="{% url 'my_trip_reports' %}" class="btn btn-secondary mx-2">My Trip Reports</a>
-                    <a href="{% url 'trip_report_create' %}" class="btn btn-primary mx-2">+ Write a trip report</a>
+                    <a href="{% url 'my_trip_reports' %}" class="btn btn-outline-secondary btn-sm">My Trip Reports</a>
+                    <a href="{% url 'trip_report_create' %}" class="btn btn-primary btn-sm">+ Write a Trip Report</a>
                 {% endif %}
             </div>
         </div>
 
-        <form method="get" class="row mb-4 d-flex align-items-center">
+        <form method="get" class="row g-3 mb-4 align-items-center">
             <input type="hidden" name="view" value="{{ request.GET.view|default:'card' }}">
             <div class="col-md-5">
                 <input type="text" name="q" class="form-control" placeholder="Search" value="{{ request.GET.q }}">
@@ -71,7 +75,7 @@
                         <h3 class="mt-4 mb-3 pb-2 border-bottom fw-bold">{{ trip_report.first_published_at|date:"Y" }}</h3>
                     {% endifchanged %}
                     <div class="d-flex align-items-baseline mb-2">
-                        <small class="text-muted font-monospace me-4 text-center" style="min-width: 100px;">
+                        <small class="text-muted font-monospace me-2 text-start" style="min-width: 100px;">
                             {{ trip_report.first_published_at|date:"M d, Y" }}
                         </small>
                         <a href="{{ trip_report.url }}" class="text-decoration-none fw-semibold">{{ trip_report.title }}</a>
