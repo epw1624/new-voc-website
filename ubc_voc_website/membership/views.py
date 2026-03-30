@@ -124,7 +124,7 @@ def member_list(request):
         profile = exec.user.profile
         execs.append({
             'id': profile.user.id,
-            'name': f'{profile.first_name} {profile.last_name}',
+            'name': f'{profile.full_name_with_pronouns}',
             'position': exec.exec_role,
             'email': profile.user.email,
             'phone': profile.phone
@@ -136,7 +136,7 @@ def member_list(request):
         profile = psg.user.profile
         psg_members.append({
             'id': profile.user.id,
-            'name': f'{profile.first_name} {profile.last_name}',
+            'name': f'{profile.full_name_with_pronouns}',
             'email': profile.user.email,
             'phone': profile.phone
         })
@@ -151,7 +151,7 @@ def member_list(request):
     for profile in member_profiles:
         members.append({
             'id': profile.user.id,
-            'name': f'{profile.first_name} {profile.last_name}',
+            'name': f'{profile.full_name_with_pronouns}',
             'email': profile.user.email,
             'phone': profile.phone
         })
