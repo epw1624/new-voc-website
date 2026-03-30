@@ -248,11 +248,9 @@
                             </small>
                         </div>
                     </div>
-                    {% if not trip_report.legacy_pdf %}
-                        <div class="card-body">
-                            {{ trip_report.get_body_html|strip_images|truncatewords_html:50 }}
-                        </div>
-                    {% endif %}
+                    <div class="card-body">
+                        {{ trip_report.get_body_html|strip_images|truncatewords_html:50 }}
+                    </div>
                     <div class="card-footer text-end">
                         {% if trip_report.live %}
                             <a href="{{ trip_report.url }}">Read more &rarr;</a>

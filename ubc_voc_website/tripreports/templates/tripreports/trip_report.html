@@ -73,20 +73,9 @@
             {% if page.trip %}
                 <a href="{% url 'trip_details' page.trip.id %}">View original trip posting</a>
             {% endif %}
-            {% if page.legacy_pdf %}
-                <div class="alert alert-info">
-                    <p>This is an archived trip report from the old VOC website</p>
-                    <p>
-                        If you are not seeing the PDF file below, you can
-                        <a href="{{ page.legacy_pdf.url }}" target="_blank">open it in a new tab</a>
-                    </p>
-                </div>
-                <object data="{{ page.legacy_pdf.url }}" width="100%" style="height: 80vh;"</object>></object>
-            {% else %}
-                <div class="html-content-wrapper" style="width: 100%;">
-                    {{ page.get_body_html }}
-                </div>
-            {% endif %}
+            <div class="html-content-wrapper" style="width: 100%;">
+                {{ page.get_body_html }}
+            </div>
         </article>
 
         <hr>

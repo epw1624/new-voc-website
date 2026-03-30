@@ -33,19 +33,12 @@ class TripReport(Page):
         FieldPanel('trip'),
         FieldPanel('categories'),
         FieldPanel('is_private'),
-        FieldPanel("legacy_pdf")
+        FieldPanel('legacy_html')
     ]
     parent_page_types = ['tripreports.TripReportIndexPage']
 
     old_id = models.IntegerField(blank=True, null=True)
     is_private = models.BooleanField(default=False)
-    legacy_pdf = models.ForeignKey(
-        "wagtaildocs.Document",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+"
-    )
     legacy_html = models.TextField(blank=True, null=True)
 
     def get_body_html(self):
