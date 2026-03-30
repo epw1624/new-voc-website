@@ -193,7 +193,7 @@ CACHES = {
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': '/home/ubc_voc_website/whoosh_index'
+        'PATH': '/home/ubc_voc_website/whoosh_data'
     },
 }
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
