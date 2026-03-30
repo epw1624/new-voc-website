@@ -92,7 +92,7 @@
                             {% if trip_report.live %}
                                 <div>
                                     <small class="text-muted">
-                                        posted {{ trip_report.first_published_at|date:"M d, Y H:i" }}
+                                        {{ trip_report.first_published_at|date:"M d, Y" }}
                                     </small>
                                 </div>
                             {% endif %}

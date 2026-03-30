@@ -114,7 +114,17 @@ class TripReportIndexPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        reports = TripReport.objects.child_of(self).live().public().select_related("owner__profile").prefetch_related("categories").order_by("-first_published_at")
+
+        sort_order = request.GET.get("sort", "desc")
+        order_by = "first_published_at" if sort_order == "asc" else "-first_published_at"
+
+        reports = TripReport.objects.child_of(self).live().public().select_related(
+            "owner__profile"
+            ).prefetch_related(
+                "categories"
+            ).order_by(
+                order_by
+            )
 
         if not request.user.is_authenticated or not is_member(request.user):
             reports = reports.filter(is_private=False)
@@ -138,6 +148,7 @@ class TripReportIndexPage(Page):
 
         context["reports"] = reports
         context["categories"] = TripReportCategory.objects.all()
+        context["sort"] = sort_order
         return context
     
 @register_snippet
