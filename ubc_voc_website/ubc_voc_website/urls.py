@@ -22,6 +22,7 @@ from django.urls import path, include
 from .views import about, home, how_to_join, membership_handbook, quill_image_upload
 
 from machina import urls as machina_urls
+from wagtail.contrib.sitemaps.views import sitemap as wagtail_sitemap
 
 urlpatterns = [
     path("", home, name="home"),
@@ -36,6 +37,7 @@ urlpatterns = [
     path("membership-handbook/", membership_handbook, name="membership_handbook"),
     path("message-board/", include(machina_urls)),
     path("photologue/", include("photologue.urls", namespace="photologue")),
+    path("sitemap.xml", wagtail_sitemap),
     path("trips/", include("trips.urls")),
     path("trip-reports/", include("tripreports.urls")),
     path("upload/image/", quill_image_upload, name="quill_image_upload"),
