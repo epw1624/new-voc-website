@@ -42,9 +42,21 @@
         {% for rental in rentals %}
             <tr class="{{ rental.status|table_row_class }}">
                 <td class="align-middle"><a href="{% url 'profile' rental.member.id %}">{{ rental.member.profile.full_name }}</a></td>
-                <td class="align-middle">{{ rental.start_date }}</td>
-                <td class="align-middle">{{ rental.due_date }}</td>
-                <td class="align-middle">{% if rental.return_date %}{{ rental.return_date }}{% endif %}</td>
+                <td class="align-middle">
+                    <!-- Add a hidden numeric date first, because the table sorting function reads the content of the cell -->
+                    <span style="display:none;">{{ rental.start_date|date:"Ymd" }}</span>
+                    {{ rental.start_date }}
+                </td>
+                <td class="align-middle">
+                    <span style="display:none;">{{ rental.due_date|date:"Ymd" }}</span>
+                    {{ rental.due_date }}
+                </td>
+                <td class="align-middle">
+                    {% if rental.return_date %}
+                        <span style="display:none;">{{ rental.return_date|date:"Ymd" }}</span>
+                        {{ rental.return_date }}
+                    {% endif %}
+                </td>
                 <td class="align-middle">{% if rental.type == 1 %}Gear{% else %}Library{% endif %}</td>
                 <td class="align-middle">{{ rental.what }}</td> <!-- TODO swap this out with the gear/books field once implemented-->
                 <td class="align-middle">{{ rental.deposit }}</td>
