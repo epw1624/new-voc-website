@@ -10,7 +10,7 @@ dotenv==0.9.9
 gunicorn==23.0.0
 mailchimp3==3.0.21
 openpyxl==3.1.5
-Pillow==12.1.1
+Pillow==13.0.0
 psycopg[binary]
 python-dateutil==2.9.0
 pytz
